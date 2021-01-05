@@ -7,6 +7,7 @@ import (
 	"github.com/golang/glog"
 	"path/filepath"
 	"strconv"
+	"net/url"
 )
 
 var (
@@ -97,7 +98,7 @@ func (d *Dataset) CopyFrom(source FreenasResource) error {
 }
 
 func (d *Dataset) Get(server *FreenasServer) error {
-	endpoint := fmt.Sprintf("/api/v1.0/storage/dataset/%s/", d.Name)
+	endpoint := fmt.Sprintf("/api/v2.0/pool/dataset/id/%s/", url.QueryEscape(d.Name))
 	var dataset Dataset
 	var e interface{}
 	resp, err := server.getSlingConnection().Get(endpoint).Receive(&dataset, &e)
@@ -119,7 +120,7 @@ func (d *Dataset) Get(server *FreenasServer) error {
 
 func (d *Dataset) Create(server *FreenasServer) error {
 	parent, dsName := filepath.Split(d.Name)
-	endpoint := fmt.Sprintf("/api/v1.0/storage/dataset/%s", parent)
+	endpoint := fmt.Sprintf("/api/v2.0/pool/dataset/%s", url.QueryEscape(parent))
 	var dataset Dataset
 	var e interface{}
 
@@ -148,7 +149,7 @@ func (d *Dataset) Create(server *FreenasServer) error {
 }
 
 func (d *Dataset) Delete(server *FreenasServer) error {
-	endpoint := fmt.Sprintf("/api/v1.0/storage/dataset/%s/", d.Name)
+	endpoint := fmt.Sprintf("/api/v2.0/pool/dataset/id/%s/", url.QueryEscape(d.Name))
 	var e interface{}
 	resp, err := server.getSlingConnection().Delete(endpoint).Receive(nil, &e)
 	if err != nil {

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang/glog"
+	"net/url"
 )
 
 type Permission struct {
@@ -16,9 +17,9 @@ type Permission struct {
 }
 
 func (p *Permission) Put(server *FreenasServer) error {
-	endpoint := "/api/v1.0/storage/permission/"
+	endpoint := fmt.Sprintf("/api/v2.0/pool/dataset/id/%s/permission", url.QueryEscape(p.Path))
 	var e interface{}
-	resp, err := server.getSlingConnection().Put(endpoint).BodyJSON(p).Receive(nil, &e)
+	resp, err := server.getSlingConnection().Post(endpoint).BodyJSON(p).Receive(nil, &e)
 	if err != nil {
 		glog.Warningln(err)
 		return err

@@ -50,7 +50,7 @@ func (n *NfsShare) CopyFrom(source FreenasResource) error {
 
 func (n *NfsShare) Get(server *FreenasServer) error {
 	if n.Id > 0 {
-		endpoint := fmt.Sprintf("/api/v1.0/sharing/nfs/%d/", n.Id)
+		endpoint := fmt.Sprintf("/api/v1.0/sharing/nfs/id/%d/", n.Id)
 		var nfs NfsShare
 		var e interface{}
 		resp, err := server.getSlingConnection().Get(endpoint).Receive(&nfs, &e)
@@ -70,7 +70,7 @@ func (n *NfsShare) Get(server *FreenasServer) error {
 		return nil
 	}
 
-	endpoint := "/api/v1.0/sharing/nfs/?limit=1000"
+	endpoint := "/api/v2.0/sharing/nfs/?limit=1000"
 	var shares []NfsShare
 	var e interface{}
 	resp, err := server.getSlingConnection().Get(endpoint).Receive(&shares, &e)
@@ -108,7 +108,7 @@ func (s *NfsShare) contains(path string) bool {
 }
 
 func (n *NfsShare) Create(server *FreenasServer) error {
-	endpoint := "/api/v1.0/sharing/nfs/"
+	endpoint := "/api/v2.0/sharing/nfs/"
 	var nfs NfsShare
 	var e interface{}
 	resp, err := server.getSlingConnection().Post(endpoint).BodyJSON(n).Receive(&nfs, &e)
@@ -129,7 +129,7 @@ func (n *NfsShare) Create(server *FreenasServer) error {
 }
 
 func (n *NfsShare) Delete(server *FreenasServer) error {
-	endpoint := fmt.Sprintf("/api/v1.0/sharing/nfs/%d/", n.Id)
+	endpoint := fmt.Sprintf("/api/v2.0/sharing/nfs/id/%d/", n.Id)
 	var e interface{}
 	resp, err := server.getSlingConnection().Delete(endpoint).Receive(nil, &e)
 	if err != nil {
